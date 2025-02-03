@@ -16,9 +16,9 @@ public class ChatController {
     @Autowired
     private ChatServiceImpl chatService;
 
-    @GetMapping("user/{userId}")
-    public List<ChatDTO> getChatsByUserId(@PathVariable UUID userId) {
-        return chatService.getChatsByUserId(userId);
+    @GetMapping("user/{userEmail}")
+    public List<ChatDTO> getChatsByUserId(@PathVariable String userEmail) {
+        return chatService.getChatsByUserEmail(userEmail);
     }
 
     @PostMapping

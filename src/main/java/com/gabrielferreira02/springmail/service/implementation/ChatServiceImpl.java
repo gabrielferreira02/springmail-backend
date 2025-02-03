@@ -31,9 +31,15 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<ChatDTO> getChatsByUserId(UUID userId) {
+    public List<ChatDTO> getChatsByUserEmail(String userEmail) {
         Pageable pageable = PageRequest.of(0, 40);
-        return chatRepository.getAllChatsByUserId(userId, pageable);
+        User user = userRepository.findByEmail(userEmail);
+
+        if(user == null) {
+            return List.of();
+        }
+
+        return chatRepository.getAllChatsByUserId(user.getId(), pageable);
     }
 
     @Override
@@ -41,29 +47,29 @@ public class ChatServiceImpl implements ChatService {
         Map<String, String> message = new HashMap<>();
 
         if(body.subject().isEmpty()) {
-            message.put("error", "Field subject cannot be empty");
+            message.put("error", "Campo assunto não pode estar vazio");
             return ResponseEntity.badRequest().body(message);
         }
 
         if(body.destination().isEmpty()) {
-            message.put("error", "Field destination cannot be empty");
+            message.put("error", "Campo do destinatário não pode estar vazio");
             return ResponseEntity.badRequest().body(message);
         }
 
         User destination = userRepository.findByEmail(body.destination());
         if(destination == null) {
-            message.put("error", "Email address not found");
+            message.put("error", "Email não encontrado");
             return ResponseEntity.badRequest().body(message);
         }
 
         if(body.sender().isEmpty()) {
-            message.put("error", "Field sender cannot be empty");
+            message.put("error", "Falha ao localizar seu email");
             return ResponseEntity.badRequest().body(message);
         }
 
-        Optional<User> sender = userRepository.findById(UUID.fromString(body.sender()));
-        if(sender.isEmpty()) {
-            message.put("error", "User id not found");
+        User sender = userRepository.findByEmail(body.sender());
+        if(sender == null) {
+            message.put("error", "Falha ao localizar seu email");
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -71,7 +77,7 @@ public class ChatServiceImpl implements ChatService {
                 null,
                 body.subject(),
                 destination,
-                sender.get(),
+                sender,
                 false,
                 null,
                 null,
@@ -83,14 +89,14 @@ public class ChatServiceImpl implements ChatService {
         Message newMessage = new Message(
                 null,
                 createdChat,
-                sender.get(),
+                sender,
                 body.content(),
                 null
         );
 
         messageRepository.save(newMessage);
 
-        message.put("message", "Chat created");
+        message.put("message", "Mensagem enviada");
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 }

@@ -11,6 +11,6 @@ import java.util.Map;
 import java.util.UUID;
 
 public interface ChatService {
-    List<ChatDTO> getChatsByUserId(@PathVariable UUID userId);
+    List<ChatDTO> getChatsByUserEmail(@PathVariable String userEmail);
     ResponseEntity<Map<String, String>> createChat(@RequestBody CreateChatDTO body);
 }

@@ -13,7 +13,7 @@ public interface ChatRepository extends JpaRepository<Chat, UUID> {
     @Query("""
           SELECT new com.gabrielferreira02.springmail.presentation.dto.ChatDTO(
               c.id, c.subject, c.from.username,
-              m.content, c.isRead
+              m.content, c.isRead, c.updatedAt
           ) \s
           FROM Chat c
           LEFT JOIN Message m ON m.chat.id = c.id
