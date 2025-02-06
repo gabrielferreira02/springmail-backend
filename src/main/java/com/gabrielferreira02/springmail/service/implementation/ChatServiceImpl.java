@@ -43,6 +43,30 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public List<ChatDTO> getSentChatsByUserEmail(String userEmail) {
+        Pageable pageable = PageRequest.of(0, 40);
+        User user = userRepository.findByEmail(userEmail);
+
+        if(user == null) {
+            return List.of();
+        }
+
+        return chatRepository.getAllSentChatsByUserId(user.getId(), pageable);
+    }
+
+    @Override
+    public List<ChatDTO> getSentChatsByUsername(String from, String to) {
+        Pageable pageable = PageRequest.of(0, 40);
+        return chatRepository.getSentChatsByUsername(from ,to, pageable);
+    }
+
+    @Override
+    public List<ChatDTO> getReceivedChatsByUsername(String from, String to) {
+        Pageable pageable = PageRequest.of(0, 40);
+        return chatRepository.getReceivedChatsByUsername(from ,to, pageable);
+    }
+
+    @Override
     public ResponseEntity<Map<String, String>> createChat(CreateChatDTO body) {
         Map<String, String> message = new HashMap<>();
 
@@ -76,8 +100,8 @@ public class ChatServiceImpl implements ChatService {
         Chat newChat = new Chat(
                 null,
                 body.subject(),
-                destination,
                 sender,
+                destination,
                 false,
                 null,
                 null,
