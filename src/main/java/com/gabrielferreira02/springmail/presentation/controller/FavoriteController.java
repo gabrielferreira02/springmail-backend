@@ -1,6 +1,5 @@
 package com.gabrielferreira02.springmail.presentation.controller;
 
-import com.gabrielferreira02.springmail.persistence.entity.Favorite;
 import com.gabrielferreira02.springmail.presentation.dto.ChatDTO;
 import com.gabrielferreira02.springmail.presentation.dto.FavoriteDTO;
 import com.gabrielferreira02.springmail.service.implementation.FavoriteServiceImpl;
