@@ -8,5 +8,6 @@ public record ChatDTO(UUID id,
                       String username,
                       String message,
                       boolean isRead,
-                      Instant updatedAt) {
+                      Instant updatedAt,
+                      boolean isFavorite) {
 }
