@@ -2,8 +2,10 @@ package com.gabrielferreira02.springmail.persistence.repository;
 
 import com.gabrielferreira02.springmail.persistence.entity.Chat;
 import com.gabrielferreira02.springmail.presentation.dto.ChatDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -69,5 +71,19 @@ public interface ChatRepository extends JpaRepository<Chat, UUID> {
           ORDER BY c.updatedAt DESC
           """)
     List<ChatDTO> getReceivedChatsByUsername(String from, String to, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            DELETE FROM Chat c WHERE c.from.id = :id
+            """)
+    void deleteByFromId(UUID id);
+
+    @Modifying
+    @Transactional
+    @Query("""
+            DELETE FROM Chat c WHERE c.to.id = :id
+            """)
+    void deleteByToId(UUID id);
 
 }

@@ -2,8 +2,10 @@ package com.gabrielferreira02.springmail.persistence.repository;
 
 import com.gabrielferreira02.springmail.persistence.entity.Favorite;
 import com.gabrielferreira02.springmail.presentation.dto.ChatDTO;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -46,4 +48,9 @@ public interface FavoriteRepository extends JpaRepository<Favorite, UUID> {
             ORDER BY c.updatedAt DESC
             """)
     List<ChatDTO> findFavoritesByUsername(String userEmail, String username, Pageable pageable);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Favorite f WHERE f.chat.id IN (SELECT c.id FROM Chat c WHERE c.from.id = :userId OR c.to.id = :userId)")
+    void deleteFavoritesByChat(UUID userId);
 }
