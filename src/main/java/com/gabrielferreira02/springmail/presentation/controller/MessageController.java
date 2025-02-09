@@ -6,6 +6,7 @@ import com.gabrielferreira02.springmail.presentation.dto.MessageDTO;
 import com.gabrielferreira02.springmail.service.implementation.MessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +21,13 @@ public class MessageController {
     private MessageServiceImpl messageService;
 
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Map<String, String>> responseMessage(@RequestBody CreateMessageDTO body) {
         return messageService.responseMessage(body);
     }
 
     @GetMapping("chat/{id}")
+    @PreAuthorize("hasRole('USER')")
     public List<MessageDTO> getAllMessagesByChatId(@PathVariable UUID id) {
         return messageService.getAllMessagesByChatId(id);
     }

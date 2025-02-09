@@ -5,6 +5,7 @@ import com.gabrielferreira02.springmail.presentation.dto.FavoriteDTO;
 import com.gabrielferreira02.springmail.service.implementation.FavoriteServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,22 +19,26 @@ public class FavoriteController {
     private FavoriteServiceImpl favoriteService;
 
     @GetMapping("{email}")
+    @PreAuthorize("hasRole('USER')")
     public List<ChatDTO> findFavorites(@PathVariable String email) {
         return favoriteService.findFavorites(email);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('USER')")
     public List<ChatDTO> findFavoriteChatsByUsername(@RequestParam String username,
                                                      @RequestParam String userEmail) {
         return favoriteService.findFavoriteChatsByUsername(username, userEmail);
     }
 
     @PostMapping()
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> favorite(@RequestBody FavoriteDTO body) {
         return favoriteService.favorite(body);
     }
 
     @DeleteMapping()
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> removeFavorite(@RequestParam String userEmail, @RequestParam UUID chatId) {
         return favoriteService.removeFavorite(userEmail, chatId);
     }
