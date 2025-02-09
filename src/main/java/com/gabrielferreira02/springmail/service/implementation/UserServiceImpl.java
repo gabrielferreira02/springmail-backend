@@ -47,11 +47,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Void> updateUsername(UpdateUsernameDTO body) {
+        if(body.username().isEmpty()) {
+            log.error("Username can not be empty}");
+            return ResponseEntity.badRequest().build();
+        }
+
         User user = userRepository.findByEmail(body.email());
 
         if(user == null) {
             log.error("User not found: {}", body.email());
-            return null;
+            return ResponseEntity.notFound().build();
         }
 
         user.setUsername(body.username());
@@ -62,6 +67,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<?> updatePassword(UpdatePasswordDTO body) {
+        if(body.newPassword().length() < 8) {
+            log.error("Invalid password. Must be greater than 8 characters");
+            return ResponseEntity.badRequest().build();
+        }
+
         User user = userRepository.findByEmail(body.email());
 
         if(user == null) {
