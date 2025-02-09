@@ -11,6 +11,7 @@ import com.gabrielferreira02.springmail.service.interfaces.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -21,12 +22,14 @@ public class UserServiceImpl implements UserService {
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
     private final FavoriteRepository favoriteRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository, MessageRepository messageRepository, FavoriteRepository favoriteRepository) {
+    public UserServiceImpl(UserRepository userRepository, ChatRepository chatRepository, MessageRepository messageRepository, FavoriteRepository favoriteRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
         this.favoriteRepository = favoriteRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.badRequest().body("Senha incorreta");
         }
 
-        user.setPassword(body.newPassword());
+        user.setPassword(passwordEncoder.encode(body.newPassword()));
         userRepository.save(user);
         log.info("Password updated with success");
         return ResponseEntity.status(HttpStatus.OK).build();
