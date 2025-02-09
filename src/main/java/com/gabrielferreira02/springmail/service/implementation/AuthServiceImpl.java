@@ -3,9 +3,16 @@ package com.gabrielferreira02.springmail.service.implementation;
 import com.gabrielferreira02.springmail.persistence.entity.User;
 import com.gabrielferreira02.springmail.persistence.repository.UserRepository;
 import com.gabrielferreira02.springmail.presentation.dto.CreateUserDTO;
+import com.gabrielferreira02.springmail.presentation.dto.LoginRequestDTO;
 import com.gabrielferreira02.springmail.service.interfaces.AuthService;
+import com.gabrielferreira02.springmail.utility.utils.JwtUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -15,9 +22,15 @@ import java.util.Map;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthServiceImpl(UserRepository userRepository) {
+    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
     @Override
@@ -49,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
                 null,
                 body.username(),
                 body.email() + "@springmail.com",
-                body.password()
+                passwordEncoder.encode(body.password())
         );
 
         System.out.println(userRepository.save(newUser).getId());
@@ -58,7 +71,20 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public ResponseEntity<?> login() {
-        return null;
+    public ResponseEntity<?> login(LoginRequestDTO body) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        body.email(),
+                        body.password()
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtil.generateToken(authentication.getName());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("email", authentication.getName());
+        response.put("token", jwt);
+        return ResponseEntity.ok(response);
     }
 }
