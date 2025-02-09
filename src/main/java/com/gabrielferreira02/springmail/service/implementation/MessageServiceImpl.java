@@ -45,7 +45,7 @@ public class MessageServiceImpl implements MessageService {
 
         if(user == null) {
             log.error("User not found");
-            message.put("error", "User id not found");
+            message.put("error", "User not found");
             return ResponseEntity.badRequest().body(message);
         }
 
