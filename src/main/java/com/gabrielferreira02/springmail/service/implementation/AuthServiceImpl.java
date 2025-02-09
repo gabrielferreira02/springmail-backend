@@ -6,6 +6,7 @@ import com.gabrielferreira02.springmail.presentation.dto.CreateUserDTO;
 import com.gabrielferreira02.springmail.presentation.dto.LoginRequestDTO;
 import com.gabrielferreira02.springmail.service.interfaces.AuthService;
 import com.gabrielferreira02.springmail.utility.utils.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -38,12 +40,14 @@ public class AuthServiceImpl implements AuthService {
         Map<String, String> message = new HashMap<>();
 
         if(body.username().isEmpty()) {
+            log.error("Field username is empty");
             message.put("error", "Field username cannot be empty");
             return ResponseEntity.badRequest().body(message);
         }
 
         if(body.password().isEmpty() ||
                 body.password().length() < 8) {
+            log.error("Field password is empty");
             message.put("error", "Field password cannot be empty");
             return ResponseEntity.badRequest().body(message);
         }
@@ -54,6 +58,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if(userRepository.findByEmail(body.email() + "@springmail.com") != null) {
+            log.error("Email {} already exists", body.email());
             message.put("error", "Email already exists. Try other.");
             return ResponseEntity.badRequest().body(message);
         }
@@ -66,6 +71,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         System.out.println(userRepository.save(newUser).getId());
+        log.info("User created with success");
         message.put("message", "User created.");
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
@@ -79,12 +85,14 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
+        log.warn("Authenticating user");
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateToken(authentication.getName());
 
         Map<String, String> response = new HashMap<>();
         response.put("email", authentication.getName());
         response.put("token", jwt);
+        log.info("User authenticated whit success");
         return ResponseEntity.ok(response);
     }
 }
