@@ -12,33 +12,38 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ChatRepository extends JpaRepository<Chat, UUID> {
+
     @Query("""
-          SELECT new com.gabrielferreira02.springmail.presentation.dto.ChatDTO(
-              c.id, c.subject, c.from.username,
-              m.content, c.isRead, c.updatedAt,
-              CASE WHEN f.id IS NOT NULL THEN true ELSE false END
-          ) \s
-          FROM Chat c
-          LEFT JOIN Message m ON m.chat.id = c.id
-          LEFT JOIN Favorite f ON f.chat.id = c.id AND f.user.id = :userId
-          WHERE c.to.id = :userId
-          AND m.createdAt = (SELECT MAX(m2.createdAt) FROM Message m2 WHERE m2.chat.id = c.id)
-          ORDER BY c.updatedAt DESC
+        SELECT new com.gabrielferreira02.springmail.presentation.dto.ChatDTO(
+            c.id, c.subject, c.from.username,
+            (SELECT m2.content FROM Message m2 WHERE m2.chat.id = c.id ORDER BY m2.createdAt DESC LIMIT 1),
+            c.isRead,
+            (SELECT m3.createdAt FROM Message m3 WHERE m3.chat.id = c.id ORDER BY m3.createdAt DESC LIMIT 1),
+            CASE WHEN f.id IS NOT NULL THEN true ELSE false END
+        )
+        FROM Chat c
+        LEFT JOIN Favorite f ON f.chat.id = c.id AND f.user.id = :userId
+        WHERE c.to.id = :userId
+        ORDER BY (
+            SELECT MAX(m4.createdAt) FROM Message m4 WHERE m4.chat.id = c.id
+        ) DESC
     """)
     List<ChatDTO> getAllChatsByUserId(UUID userId, Pageable pageable);
 
     @Query("""
-          SELECT new com.gabrielferreira02.springmail.presentation.dto.ChatDTO(
-              c.id, c.subject, c.from.username,
-              m.content, c.isRead, c.updatedAt,
-              CASE WHEN f.id IS NOT NULL THEN true ELSE false END
-          ) \s
-          FROM Chat c
-          LEFT JOIN Message m ON m.chat.id = c.id
-          LEFT JOIN Favorite f ON f.chat.id = c.id AND f.user.id = :userId
-          WHERE c.from.id = :userId
-          AND m.createdAt = (SELECT MAX(m2.createdAt) FROM Message m2 WHERE m2.chat.id = c.id)
-          ORDER BY c.updatedAt DESC
+        SELECT new com.gabrielferreira02.springmail.presentation.dto.ChatDTO(
+            c.id, c.subject, c.from.username,
+            (SELECT m2.content FROM Message m2 WHERE m2.chat.id = c.id ORDER BY m2.createdAt DESC LIMIT 1),
+            c.isRead,
+            (SELECT m3.createdAt FROM Message m3 WHERE m3.chat.id = c.id ORDER BY m3.createdAt DESC LIMIT 1),
+            CASE WHEN f.id IS NOT NULL THEN true ELSE false END
+        )
+        FROM Chat c
+        LEFT JOIN Favorite f ON f.chat.id = c.id AND f.user.id = :userId
+        WHERE c.from.id = :userId
+        ORDER BY (
+            SELECT MAX(m4.createdAt) FROM Message m4 WHERE m4.chat.id = c.id
+        ) DESC
     """)
     List<ChatDTO> getAllSentChatsByUserId(UUID userId, Pageable pageable);
 
