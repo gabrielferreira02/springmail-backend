@@ -6,8 +6,7 @@ import com.gabrielferreira02.springmail.persistence.entity.User;
 import com.gabrielferreira02.springmail.persistence.repository.ChatRepository;
 import com.gabrielferreira02.springmail.persistence.repository.MessageRepository;
 import com.gabrielferreira02.springmail.persistence.repository.UserRepository;
-import com.gabrielferreira02.springmail.presentation.dto.ChatDTO;
-import com.gabrielferreira02.springmail.presentation.dto.CreateChatDTO;
+import com.gabrielferreira02.springmail.presentation.dto.*;
 import com.gabrielferreira02.springmail.service.interfaces.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -135,5 +134,57 @@ public class ChatServiceImpl implements ChatService {
         message.put("message", "Mensagem enviada");
         log.info("New message sent with success");
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
+    }
+
+    @Override
+    public ChatInfoDTO getByChatId(UUID id) {
+        Optional<Chat> chat = chatRepository.findById(id);
+
+        if(chat.isEmpty()) {
+            log.error("Chat {} not found", id);
+            return null;
+        }
+
+        log.info("Returned information from chat: {}", id);
+        return new ChatInfoDTO(
+                id,
+                chat.get().getSubject(),
+                chat.get().getFrom().getEmail(),
+                chat.get().getTo().getEmail()
+        );
+    }
+
+    @Override
+    public void setIsRead(SetIsReadDTO body) {
+        Optional<Chat> chat = chatRepository.findById(body.chatId());
+        Message message = messageRepository.getLastMessageFromChat(body.chatId());
+
+        if(chat.isEmpty()) {
+            log.error("Chat {} not found", body.chatId());
+            return;
+        }
+
+        if(chat.get().getFrom().getEmail().equals(body.email())) {
+            if(chat.get().getTo().getEmail().equals(body.email())) {
+                log.info("Chat is read now");
+                chat.get().setRead(true);
+                chatRepository.save(chat.get());
+                return;
+            }
+
+            if(!message.getSender().getEmail().equals(body.email())) {
+                log.info("Chat is read now");
+                chat.get().setRead(true);
+                chatRepository.save(chat.get());
+                return;
+            }
+        }
+
+        if(!message.getSender().getEmail().equals(body.email())) {
+            log.info("Chat is read now");
+            chat.get().setRead(true);
+            chatRepository.save(chat.get());
+            return;
+        }
     }
 }

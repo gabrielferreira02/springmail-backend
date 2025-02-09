@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -15,6 +17,8 @@ import java.util.UUID;
 @Table(name = "tb_messages")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Message {
 
     @Id

@@ -39,7 +39,7 @@ public class Chat {
     @NotNull
     private boolean isRead;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JsonIgnore
     private List<Message> messages;
 

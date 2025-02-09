@@ -41,9 +41,9 @@ public class MessageServiceImpl implements MessageService {
             return ResponseEntity.badRequest().body(message);
         }
 
-        Optional<User> user = userRepository.findById(UUID.fromString(body.senderId()));
+        User user = userRepository.findByEmail(body.senderEmail());
 
-        if(user.isEmpty()) {
+        if(user == null) {
             log.error("User not found");
             message.put("error", "User id not found");
             return ResponseEntity.badRequest().body(message);
@@ -60,11 +60,14 @@ public class MessageServiceImpl implements MessageService {
         Message newMessage = new Message(
                 null,
                 chat.get(),
-                user.get(),
+                user,
                 body.content(),
                 null
         );
 
+        
+        chat.get().setRead(false);
+        chatRepository.save(chat.get());
         messageRepository.save(newMessage);
         log.info("Message sent with success in chat: {}", chat.get().getId());
         message.put("message", "Message send with success");

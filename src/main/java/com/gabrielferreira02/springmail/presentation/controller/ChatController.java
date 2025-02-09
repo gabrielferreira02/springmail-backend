@@ -1,10 +1,11 @@
 package com.gabrielferreira02.springmail.presentation.controller;
 
 import com.gabrielferreira02.springmail.persistence.entity.Chat;
-import com.gabrielferreira02.springmail.presentation.dto.ChatDTO;
-import com.gabrielferreira02.springmail.presentation.dto.CreateChatDTO;
+import com.gabrielferreira02.springmail.persistence.entity.Message;
+import com.gabrielferreira02.springmail.presentation.dto.*;
 import com.gabrielferreira02.springmail.service.implementation.ChatServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,8 +44,19 @@ public class ChatController {
         return chatService.getReceivedChatsByUsername(from, to);
     }
 
+    @GetMapping("{id}")
+    public ChatInfoDTO getChatById(@PathVariable UUID id) {
+        return chatService.getByChatId(id);
+    }
+
     @PostMapping
     public ResponseEntity<Map<String, String>> createChat(@RequestBody CreateChatDTO body) {
         return chatService.createChat(body);
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> setIsRead(@RequestBody SetIsReadDTO body) {
+        chatService.setIsRead(body);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
