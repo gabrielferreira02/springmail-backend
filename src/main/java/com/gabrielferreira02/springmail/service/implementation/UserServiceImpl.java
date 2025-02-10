@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> updatePassword(UpdatePasswordDTO body) {
+    public ResponseEntity<Object> updatePassword(UpdatePasswordDTO body) {
         if(body.newPassword().length() < 8) {
             log.error("Invalid password. Must be greater than 8 characters");
             return ResponseEntity.badRequest().build();

@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface UserService {
     User getUserByEmail(String email);
     ResponseEntity<Void> updateUsername(UpdateUsernameDTO body);
-    ResponseEntity<?> updatePassword(UpdatePasswordDTO body);
+    ResponseEntity<Object> updatePassword(UpdatePasswordDTO body);
     ResponseEntity<Void> deleteUser(String email);
 }

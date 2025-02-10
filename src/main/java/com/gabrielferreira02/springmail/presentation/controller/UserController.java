@@ -30,7 +30,7 @@ public class UserController {
 
     @PutMapping("password")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordDTO body) {
+    public ResponseEntity<Object> updatePassword(@RequestBody UpdatePasswordDTO body) {
         return userService.updatePassword(body);
     }
 
