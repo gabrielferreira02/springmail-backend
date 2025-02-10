@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         if(body.password().isEmpty() ||
                 body.password().length() < 8) {
             log.error("Field password is empty");
-            message.put("error", "Field password cannot be empty");
+            message.put("error", "Field password cannot be empty or less than 8 characters");
             return ResponseEntity.badRequest().body(message);
         }
 
@@ -70,14 +70,13 @@ public class AuthServiceImpl implements AuthService {
                 passwordEncoder.encode(body.password())
         );
 
-        System.out.println(userRepository.save(newUser).getId());
         log.info("User created with success");
         message.put("message", "User created.");
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
     @Override
-    public ResponseEntity<?> login(LoginRequestDTO body) {
+    public ResponseEntity<Map<String, String>> login(LoginRequestDTO body) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         body.email(),

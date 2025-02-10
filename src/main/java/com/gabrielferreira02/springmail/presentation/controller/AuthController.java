@@ -23,7 +23,7 @@ public class AuthController {
 
     @PreAuthorize("permitAll()")
     @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO body) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequestDTO body) {
         return authService.login(body);
     }
 
