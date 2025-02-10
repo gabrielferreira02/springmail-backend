@@ -33,13 +33,13 @@ public class FavoriteController {
 
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> favorite(@RequestBody FavoriteDTO body) {
+    public ResponseEntity<Object> favorite(@RequestBody FavoriteDTO body) {
         return favoriteService.favorite(body);
     }
 
     @DeleteMapping()
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> removeFavorite(@RequestParam String userEmail, @RequestParam UUID chatId) {
+    public ResponseEntity<Object> removeFavorite(@RequestParam String userEmail, @RequestParam UUID chatId) {
         return favoriteService.removeFavorite(userEmail, chatId);
     }
 }

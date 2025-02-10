@@ -47,7 +47,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public ResponseEntity<?> favorite(FavoriteDTO body) {
+    public ResponseEntity<Object> favorite(FavoriteDTO body) {
         Map<String, String> response = new HashMap<>();
 
         if(body.chatId().isEmpty()) {
@@ -96,7 +96,7 @@ public class FavoriteServiceImpl implements FavoriteService {
     }
 
     @Override
-    public ResponseEntity<?> removeFavorite(String userEmail, UUID chatId) {
+    public ResponseEntity<Object> removeFavorite(String userEmail, UUID chatId) {
         Map<String, String> response = new HashMap<>();
 
         if(chatId == null) {
