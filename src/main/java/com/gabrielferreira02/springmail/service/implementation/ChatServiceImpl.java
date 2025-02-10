@@ -89,6 +89,18 @@ public class ChatServiceImpl implements ChatService {
             return ResponseEntity.badRequest().body(message);
         }
 
+        if(body.sender().isEmpty()) {
+            log.error("User email is empty");
+            message.put("error", "Falha ao localizar seu email");
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        if(body.content().isEmpty()) {
+            log.error("User email is empty");
+            message.put("error", "Mensagem não pode ser vazia");
+            return ResponseEntity.badRequest().body(message);
+        }
+
         User destination = userRepository.findByEmail(body.destination());
         if(destination == null) {
             log.error("User destination not found: {}", body.destination());
@@ -96,11 +108,6 @@ public class ChatServiceImpl implements ChatService {
             return ResponseEntity.badRequest().body(message);
         }
 
-        if(body.sender().isEmpty()) {
-            log.error("User email is empty");
-            message.put("error", "Falha ao localizar seu email");
-            return ResponseEntity.badRequest().body(message);
-        }
 
         User sender = userRepository.findByEmail(body.sender());
         if(sender == null) {
