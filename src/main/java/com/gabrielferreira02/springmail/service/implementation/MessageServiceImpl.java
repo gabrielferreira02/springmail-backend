@@ -70,7 +70,7 @@ public class MessageServiceImpl implements MessageService {
         chatRepository.save(chat.get());
         messageRepository.save(newMessage);
         log.info("Message sent with success in chat: {}", chat.get().getId());
-        message.put("message", "Message send with success");
+        message.put("message", "Sent messsage with success");
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
     }
 
