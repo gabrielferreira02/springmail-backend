@@ -91,6 +91,7 @@ class ChatRepositoryTest {
     }
 
     @Test
+    @DisplayName("It should delete sent chats from user id")
     void deleteByFromId() {
         assertEquals(2, chatRepository.count());
         messageRepository.deleteByChatFromUser(this.userId);
@@ -99,6 +100,7 @@ class ChatRepositoryTest {
     }
 
     @Test
+    @DisplayName("It should delete received chats from user id")
     void deleteByToId() {
         assertEquals(2, chatRepository.count());
         messageRepository.deleteByChatFromUser(this.userId);
