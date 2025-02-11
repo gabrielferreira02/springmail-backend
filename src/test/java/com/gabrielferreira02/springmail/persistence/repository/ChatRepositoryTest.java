@@ -33,7 +33,6 @@ class ChatRepositoryTest {
     private FavoriteRepository favoriteRepository;
 
     private UUID userId;
-    private UUID chatId;
 
     @BeforeEach
     void setup() {
@@ -48,7 +47,6 @@ class ChatRepositoryTest {
         this.userId = userRepository.findAll().getFirst().getId();
         userRepository.save(user2);
         chatRepository.save(chat);
-        this.chatId = chatRepository.findAll().getFirst().getId();
         chatRepository.save(chat2);
         messageRepository.save(message);
         messageRepository.save(message2);
