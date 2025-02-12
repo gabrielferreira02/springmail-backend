@@ -54,7 +54,7 @@ class MessageServiceImplTest {
 
             assertEquals(HttpStatus.CREATED, response.getStatusCode());
             assertNotNull(response.getBody());
-            assertEquals("Message send with success", response.getBody().get("message"));
+            assertEquals("Sent messsage with success", response.getBody().get("message"));
         }
 
         @Test
