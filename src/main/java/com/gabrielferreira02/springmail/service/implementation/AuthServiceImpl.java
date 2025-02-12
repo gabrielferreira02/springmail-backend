@@ -70,6 +70,7 @@ public class AuthServiceImpl implements AuthService {
                 passwordEncoder.encode(body.password())
         );
 
+        userRepository.save(newUser);
         log.info("User created with success");
         message.put("message", "User created.");
         return ResponseEntity.status(HttpStatus.CREATED).body(message);
