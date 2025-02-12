@@ -1,5 +1,10 @@
 # Springmail backend api
 
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
+
 This project is part of a fullstack application of a simplified email platform. Below are some features presented in it
 
 - Create users
@@ -10,6 +15,7 @@ This project is part of a fullstack application of a simplified email platform. 
 - Log implementation in api
 - Cors configuration
 - Automated tests
+- Documentation with swagger
 
 The authentication part is made using jwt and only one role "USERS", so if a user is logged in successfully he received the respective one
 
