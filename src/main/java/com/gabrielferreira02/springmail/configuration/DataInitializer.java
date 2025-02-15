@@ -41,16 +41,16 @@ public class DataInitializer {
             User user2 = userRepository.save(
                     new User(
                             null,
-                            "Mar Acevedo",
-                            "maracevedo@springmail.com",
+                            "Gabriel Ferreira",
+                            "gabrielf@springmail.com",
                             passwordEncoder.encode("12345678")
                     )
             );
             User user3 = userRepository.save(
                     new User(
                             null,
-                            "Gabriel Ferreira",
-                            "gabrielf@springmail.com",
+                            "Mar Acevedo",
+                            "maracevedo@springmail.com",
                             passwordEncoder.encode("12345678")
                     )
             );
