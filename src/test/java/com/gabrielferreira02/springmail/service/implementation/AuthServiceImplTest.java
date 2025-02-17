@@ -96,6 +96,18 @@ class AuthServiceImplTest {
             assertEquals("Email already exists. Try other.", response.getBody().get("error"));
         }
 
+        @Test
+        @DisplayName("It should fail on create a new user because email is not valid")
+        void errorCase4() {
+            CreateUserDTO user = new CreateUserDTO("user", "12345678", "user@123");
+
+            ResponseEntity<Map<String, String>> response = authService.register(user);
+
+            assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+            assertNotNull(response.getBody());
+            assertEquals("Email tem que ter apenas letras e numeros", response.getBody().get("error"));
+        }
+
     }
 
     @Nested

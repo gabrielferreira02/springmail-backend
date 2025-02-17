@@ -186,4 +186,23 @@ class AuthControllerTest {
                 ).andExpect(jsonPath("$.error").value( "Email already exists. Try other."))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("It should fail on create a user because email is not valid")
+    void registerError5() throws Exception {
+        CreateUserDTO user = new CreateUserDTO("user", "12345678", "user@123");
+
+        String body = objectMapper.writeValueAsString(user);
+
+        Map<String, String> message = new HashMap<>();
+        message.put("error", "Email tem que ter apenas letras e numeros");
+        when(authService.register(user)).thenReturn(ResponseEntity.badRequest().body(message));
+
+        mockMvc.perform(
+                        post("/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(body)
+                ).andExpect(jsonPath("$.error").value( "Email tem que ter apenas letras e numeros"))
+                .andExpect(status().isBadRequest());
+    }
 }

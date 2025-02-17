@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @Service
@@ -54,6 +56,14 @@ public class AuthServiceImpl implements AuthService {
 
         if(body.email().isEmpty()) {
             message.put("error", "Field email cannot be empty");
+            return ResponseEntity.badRequest().body(message);
+        }
+
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9]+$");
+        Matcher matcher = pattern.matcher(body.email());
+        if(!matcher.matches()) {
+            log.error("Email {} is not valid", body.email());
+            message.put("error", "Email tem que ter apenas letras e numeros");
             return ResponseEntity.badRequest().body(message);
         }
 
