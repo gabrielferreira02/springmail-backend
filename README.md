@@ -19,6 +19,16 @@ This project is part of a fullstack application of a simplified email platform. 
 
 The authentication part is made using jwt and only one role "USERS", so if a user is logged in successfully he received the respective one
 
+Here is the link of running application. If the api is offline send me an email because the host is free and it crashes sometimes
+```bash
+  https://springmail-backend.onrender.com
+```
+
+Swagger endpoint is in the following enpoint
+```bash
+  /swagger-ui.html
+```
+
 To run the application you can start by your IDE, but if you dont have java installed in your machine, use docker image to start
 
 First you need to clone this repository and navigate into the folder generated
