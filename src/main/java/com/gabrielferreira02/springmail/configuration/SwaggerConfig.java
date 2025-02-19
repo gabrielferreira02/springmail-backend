@@ -25,6 +25,10 @@ import org.springframework.http.HttpHeaders;
                 @Server(
                         description = "DEV SERVER",
                         url = "http://localhost:8080"
+                ),
+                @Server(
+                        description = "PRODUCTION SERVER",
+                        url = "https://springmail-backend.onrender.com"
                 )
         },
         security = @SecurityRequirement(name = "Security Token")
