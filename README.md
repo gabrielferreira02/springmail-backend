@@ -36,10 +36,6 @@ First you need to clone this repository and navigate into the folder generated
   git clone https://github.com/gabrielferreira02/springmail-backend.git
   cd springmail-backend
 ```
-Then, generate the jar file of the application
-```bash
-  mvn clean install
-```
 Now you can build the docker image and use the project
 ```bash
   docker build -t springmail .
